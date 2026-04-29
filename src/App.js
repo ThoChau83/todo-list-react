@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function App() {
-  const [todo, setTodo] = useState([]);
+  const [todo, setTodo] = useState(() => {
+    const data = localStorage.getItem("danh_sach_todo");
+    return data ? JSON.parse(data) : [];
+  });
 
   //state for search
   const [search, setSearch] = useState("");
+  //localStorage
+  useEffect(() => {
+    localStorage.setItem("danh_sach_todo", JSON.stringify(todo));
+  }, [todo]);
 
   //logic add
   function handleAdd(value) {
@@ -63,6 +70,7 @@ export default function App() {
 function TodoInput({ onHandleAdd }) {
   const [todoInput, setTodoInput] = useState("");
   function handleSubmit() {
+    if (todoInput.trim() === "") return;
     onHandleAdd(todoInput);
     setTodoInput("");
   }
